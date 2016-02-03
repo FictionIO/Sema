@@ -3,14 +3,14 @@
 
 Sema is a set of tools for adding semantical methods to boost variant types.
 
-For example let's say we have a variant type : `variant<int, double, string, recursive_wrapper<object>>` and we want to implement methods
-`isInt, isDouble, ... asObject, asInt, asDouble, ... asObject` we can define a meta function object :
+Let's say we have a variant type : `variant<int, double, string, recursive_wrapper<object>>` and we want to implement methods
+`isInt, isDouble, ... asObject, asInt, asDouble, ... asObject` we can define a meta function object as :
 
 ```
 struct MyInterface
 {
   template<typename ImplT, std::size_t Index, typename T>
-  struct get{ using type = unspecified; }; 
+  struct get{ using type = unspecified; }; // default/fallback case
   
   template<typename ImplT, std::size_t Index>
   struct get<ImplT, Index, int> // notice specialization for int
@@ -26,9 +26,9 @@ struct MyInterface
 };
 ```
 
-By default it returns `sema::unspecified`, no interface type. Otherwise if template specialization satisfies it returns the interface. If desired this allows grouping interfaces for similar types, for example you can have one interface for all integer types.
+By default it returns `sema::unspecified`, no interface type. If template specialization satisfies it returns the interface defined by `type`. This is great because it allows grouping interfaces for similar types! For example you can have one interface for all integer types.
 
-Then we can then define our interface and storage (boost variant) in one go like :
+Then we can define our interface and the storage (boost variant) in one go as :
 
 ```
 using MyType = sema<MyInterface, int, double, std::string, sema::container<std::map,std::string, sema::_1>>;
