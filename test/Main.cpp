@@ -2,9 +2,7 @@
 #define BOOST_TEST_MODULE SemaTests
 
 #include <boost/test/included/unit_test.hpp>
-#include <boost/sema/sema.hpp>
-
-namespace sema	= boost::sema;
+#include <sema/sema.hpp>
 
 BOOST_AUTO_TEST_CASE( SIMPLE_TEST )
 {
@@ -89,6 +87,3 @@ BOOST_AUTO_TEST_CASE( TEST_WITH_CUSTOM_INTERFACE )
 
 	BOOST_TEST( v.isMyType() );
 }
-
-
-

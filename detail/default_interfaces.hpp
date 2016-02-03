@@ -1,13 +1,3 @@
-//-----------------------------------------------------------------------------
-// boost sema/detail/default_interfaces.hpp header file
-// See http://www.boost.org for updates, documentation, and revision history.
-//-----------------------------------------------------------------------------
-//
-// Copyright (c) 2016 Ali Nakipoglu
-//
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
 
 #pragma once
 
@@ -18,9 +8,9 @@
 #include <boost/variant/get.hpp>
 #include <boost/blank.hpp>
 
-#include <boost/sema/detail/types.hpp>
+#include <sema/detail/types.hpp>
 
-namespace boost { namespace sema {
+namespace sema {
 
 	struct default_interfaces
 	{
@@ -105,4 +95,4 @@ namespace boost { namespace sema {
 		};
 	};
 
-} }
+}

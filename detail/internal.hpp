@@ -1,13 +1,3 @@
-//-----------------------------------------------------------------------------
-// boost sema/detail/internal.hpp header file
-// See http://www.boost.org for updates, documentation, and revision history.
-//-----------------------------------------------------------------------------
-//
-// Copyright (c) 2016 Ali Nakipoglu
-//
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
 
 #pragma once
 
@@ -22,10 +12,10 @@
 
 #include <boost/variant.hpp>
 
-#include <boost/sema/detail/types.hpp>
-#include <boost/sema/detail/container.hpp>
+#include <sema/detail/types.hpp>
+#include <sema/detail/container.hpp>
 
-namespace boost { namespace sema {
+namespace sema {
 
 	template<typename TypesVecT, typename TypeT>
 	struct has_type
@@ -110,4 +100,4 @@ namespace boost { namespace sema {
 		using type					= typename boost::make_variant_over<realtypes>::type;
 	};
 
-} }
+}
