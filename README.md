@@ -47,3 +47,7 @@ if( value.isInt() )
   std::cout << value.asInt() << std::endl;
 }
 ```
+
+##Dependencies
+
+Boost
