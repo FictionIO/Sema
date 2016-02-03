@@ -1,7 +1,7 @@
 
 ###Boost Sema 
 
-Sema is a small set of tools for adding semantical interfaces to boost variant types.
+Sema is a set of tools for adding semantical methods to boost variant types.
 
 For example let's say we have a variant type : `variant<int, double, string, recursive_wrapper<object>>` and we want to implement methods
 `isInt, isDouble, ... asObject, asInt, asDouble, ... asObject` we can define a meta function object :
