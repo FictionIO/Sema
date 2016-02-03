@@ -87,7 +87,7 @@ namespace boost { namespace sema {
 				bool isVector() const { return ( (ImplT*)this )->which() == TypeIndexT; };
 				const std::vector<ImplT> & asVector() const { return boost::get<std::vector<ImplT>>( *((ImplT*)this) ); };
 
-				const ImplT & operator [] ( const std::size_t & index ) const { return asVector[ index ]; };
+				const ImplT & operator [] ( const std::size_t & index ) const { return asVector()[ index ]; };
 			};
 		};
 
