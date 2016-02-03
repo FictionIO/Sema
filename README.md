@@ -1,5 +1,5 @@
 
-###Boost Sema 
+###Sema 
 
 Sema is a set of tools for adding semantical methods to boost variant types.
 
