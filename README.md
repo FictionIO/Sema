@@ -31,9 +31,9 @@ By default it returns `sema::unspecified`, no interface type. Otherwise if templ
 Then we can then define our interface and storage (boost variant) in one go like :
 
 ```
-using MyType = sema<MyInterface, int, double, std::string, std::map<std::string, sema::_1>>;
+using MyType = sema<MyInterface, int, double, std::string, sema::container<std::map,std::string, sema::_1>>;
 ```
-Here we used `sema::_1` to define a recursive `std::map<std::string, MyType>`
+Here we used `sema::container and sema::_1` to define a recursive type `std::map<std::string, MyType>`
 
 Now we can use our composed interface methods like :
 
