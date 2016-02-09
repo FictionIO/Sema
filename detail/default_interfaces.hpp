@@ -21,6 +21,8 @@ namespace wv {
 		{
 			struct type
 			{
+				enum { WHICH_BLANK	= TypeIndexT };
+
 				bool isBlank() const { return ( (ImplT*)this )->which() == TypeIndexT; };
 			};
 		};
@@ -29,6 +31,8 @@ namespace wv {
 		{
 			struct type
 			{
+				enum { WHICH_BOOL	= TypeIndexT };
+
 				bool isBool() const { return ( (ImplT*)this )->which() == TypeIndexT; };
 				const bool & asBool() const { return boost::get<bool>( *((ImplT*)this) ); };
 			};
@@ -38,6 +42,8 @@ namespace wv {
 		{
 			struct type
 			{
+				enum { WHICH_INT	= TypeIndexT };
+
 				bool isInt() const { return ( (ImplT*)this )->which() == TypeIndexT; };
 				const int & asInt() const { return boost::get<int>( *((ImplT*)this) ); };
 			};
@@ -47,6 +53,8 @@ namespace wv {
 		{
 			struct type
 			{
+				enum { WHICH_DOUBLE	= TypeIndexT };
+
 				bool isDouble() const { return ( (ImplT*)this )->which() == TypeIndexT; };
 				const double & asDouble() const { return boost::get<double>( *((ImplT*)this) ); };
 			};
@@ -56,6 +64,8 @@ namespace wv {
 		{
 			struct type
 			{
+				enum { WHICH_FLOAT	= TypeIndexT };
+
 				bool isFloat() const { return ( (ImplT*)this )->which() == TypeIndexT; };
 				const float & asFloat() const { return boost::get<float>( *((ImplT*)this) ); };
 			};
@@ -65,6 +75,8 @@ namespace wv {
 		{
 			struct type
 			{
+				enum { WHICH_STRING	= TypeIndexT };
+
 				bool isString() const { return ( (ImplT*)this )->which() == TypeIndexT; };
 				const std::string & asString() const { return boost::get<std::string>( *((ImplT*)this) ); };
 			};
@@ -74,6 +86,8 @@ namespace wv {
 		{
 			struct type
 			{
+				enum { WHICH_VECTOR	= TypeIndexT };
+
 				bool isVector() const { return ( (ImplT*)this )->which() == TypeIndexT; };
 				const std::vector<ImplT> & asVector() const { return boost::get<std::vector<ImplT>>( *((ImplT*)this) ); };
 
@@ -85,6 +99,8 @@ namespace wv {
 		{
 			struct type
 			{
+				enum { WHICH_MAP		= TypeIndexT };
+
 				bool isMap() const { return ( (ImplT*)this )->which() == TypeIndexT; };
 				const std::map<KeyT, ImplT> & asMap() const { return boost::get<std::map<KeyT, ImplT>>( *((ImplT*)this) ); };
 				std::map<KeyT, ImplT> & asMap() { return boost::get<std::map<KeyT, ImplT>>( *((ImplT*)this) ); };
