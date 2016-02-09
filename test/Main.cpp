@@ -1,5 +1,5 @@
 
-#define BOOST_TEST_MODULE SemaTests
+#define BOOST_TEST_MODULE WVTests
 
 #include <boost/test/included/unit_test.hpp>
 #include <wv/wv.hpp>
