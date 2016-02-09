@@ -12,16 +12,9 @@
 
 #include <boost/variant.hpp>
 
-#include <sema/detail/types.hpp>
-#include <sema/detail/container.hpp>
+#include <wv/detail/types.hpp>
 
-namespace sema {
-
-	template<typename TypesVecT, typename TypeT>
-	struct has_type
-	{
-		static const bool value			= !std::is_same<typename boost::mpl::find<TypesVecT, TypeT>::type, typename boost::mpl::end<TypesVecT>::type>::value;
-	};
+namespace wv {
 
 	template<typename TypesVecT, typename TypeT>
 	struct type_index
@@ -57,35 +50,75 @@ namespace sema {
 		using type		= typename boost::mpl::transform<TypesVecT, typename func::apply<boost::mpl::_1>>::type;
 	};
 
-	template<typename ImplT>
-	struct to_real_type
+	template<typename PlaceholderT, typename WithT>
+	struct substitute_placeholder
 	{
-		template<typename T>
+		template<typename InputT>
 		struct apply
 		{
-			using type	= T;
-		};
+			template<typename T>
+			struct substitute
+			{
+				using type	= T;
+			};
 
-		template<template<typename ...> typename ContainerT, typename ... ParamsT>
-		struct apply<container<ContainerT, ParamsT...>>
-		{
-			using type	= typename container<ContainerT, ParamsT...>:: template get<ImplT>::type;
+			template<template <typename, typename ...> typename T, typename ParamT, typename ... ParamsT>
+			struct substitute<T<ParamT, ParamsT...>>
+			{
+				template<typename ... TypesT>
+				struct packed_types{};
+
+				template<typename Type1T, typename Type2T>
+				struct pack_types;
+
+				template<typename TypeT, typename ... TypesT>
+				struct pack_types<packed_types<TypesT...>, TypeT>
+				{
+					using type	= packed_types<TypesT..., TypeT>;
+				};
+
+				template<typename ... TypesT>
+				struct unpack
+				{
+					using type	= void;
+				};
+
+				template<typename ... TypesT>
+				struct unpack<packed_types<TypesT...>>
+				{
+					using type	= T<TypesT...>;
+				};
+
+				using originals			= boost::mpl::vector<ParamT, ParamsT...>;
+				using func				= typename substitute_placeholder<PlaceholderT, WithT>:: template apply<boost::mpl::_1>;
+				using substitutedTypes	= typename boost::mpl::transform<originals, func>::type;
+				using packed			= typename boost::mpl::fold<substitutedTypes, packed_types<>, pack_types<boost::mpl::_1, boost::mpl::_2>>::type;
+				using type				= typename unpack<packed>::type;
+			};
+
+			template<>
+			struct substitute<PlaceholderT>
+			{
+				using type	= WithT;
+			};
+
+			using type		= typename substitute<InputT>::type;
 		};
 	};
 
 	template<typename ImplT, typename TypesVecT>
-	struct to_real_types_vec
+	struct to_substitude_types_vec
 	{
-		using func		= to_real_type<ImplT>;
-		using type		= typename boost::mpl::transform<TypesVecT, typename func::apply<boost::mpl::_1>>::type;
+		using func		= typename substitute_placeholder<boost::recursive_variant_, ImplT>:: template apply<boost::mpl::_1>;
+		using type		= typename boost::mpl::transform<TypesVecT, func>::type;
 	};
 
 	template<typename ImplT, typename InterfacesT, typename ... TypesT>
 	struct construct_base
 	{
 		using types					= typename to_type_vec<TypesT...>::type;
-		using realtypes				= typename to_real_types_vec<ImplT, types>::type;
-		using interface_types		= typename to_interface_types_vec<ImplT, InterfacesT, realtypes>::type;
+		using substitudes			= typename to_substitude_types_vec<ImplT, types>::type;
+		using interface_types		= typename to_interface_types_vec<ImplT, InterfacesT, substitudes>::type;
 		using valid_interface_types	= typename boost::mpl::remove<interface_types, unspecified>::type;
 		using type					= typename boost::mpl::inherit_linearly<	valid_interface_types,
 																				boost::mpl::inherit<boost::mpl::_1, boost::mpl::_2>
@@ -96,8 +129,8 @@ namespace sema {
 	struct construct_variant
 	{
 		using types					= typename to_type_vec<TypesT...>::type;
-		using realtypes				= typename to_real_types_vec<ImplT, types>::type;
-		using type					= typename boost::make_variant_over<realtypes>::type;
+		using substitudes			= typename to_substitude_types_vec<ImplT, types>::type;
+		using type					= typename boost::make_variant_over<substitudes>::type;
 	};
 
 }

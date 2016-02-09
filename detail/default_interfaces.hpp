@@ -8,9 +8,9 @@
 #include <boost/variant/get.hpp>
 #include <boost/blank.hpp>
 
-#include <sema/detail/types.hpp>
+#include <wv/detail/types.hpp>
 
-namespace sema {
+namespace wv {
 
 	struct default_interfaces
 	{

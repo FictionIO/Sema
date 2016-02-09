@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include <sema/detail/types.hpp>
+#include <wv/detail/types.hpp>
 
-namespace sema {
+namespace wv {
 
 	struct no_interface
 	{

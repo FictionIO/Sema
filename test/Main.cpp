@@ -2,12 +2,14 @@
 #define BOOST_TEST_MODULE SemaTests
 
 #include <boost/test/included/unit_test.hpp>
-#include <sema/sema.hpp>
+#include <wv/wv.hpp>
+
+using namespace wv;
 
 BOOST_AUTO_TEST_CASE( SIMPLE_TEST )
 {
-	using ValueT	= sema::sema<sema::default_interfaces, boost::blank, int, bool>;
-
+	using ValueT	= wrapped_variant<default_interfaces, boost::blank, int, bool>;
+	
 	ValueT	val;
 	BOOST_TEST( val.isBlank() );
 
@@ -22,7 +24,7 @@ BOOST_AUTO_TEST_CASE( SIMPLE_TEST )
 
 BOOST_AUTO_TEST_CASE( TEST_WITH_VECTOR )
 {
-	using ValueT	= sema::sema<sema::default_interfaces, boost::blank, int, double, sema::container<std::vector, sema::_1>>;
+	using ValueT	= wrapped_variant<default_interfaces, boost::blank, int, double, std::vector<boost::recursive_variant_>>;
 
 	ValueT val		= std::vector<ValueT>{ 10, 20.0 };
 
@@ -36,7 +38,7 @@ BOOST_AUTO_TEST_CASE( TEST_WITH_VECTOR )
 
 BOOST_AUTO_TEST_CASE( TEST_WITH_MAP )
 {
-	using ValueT	= sema::sema<sema::default_interfaces, boost::blank, int, std::string, sema::container<std::map, std::string, sema::_1>>;
+	using ValueT	= wrapped_variant<default_interfaces, boost::blank, int, std::string, std::map<std::string, boost::recursive_variant_>>;
 
 	ValueT val		= std::map<std::string, ValueT>{};
 
@@ -55,9 +57,10 @@ struct MyType{};
 
 struct MyInterfaces
 {
-	// According to this all will get no interface (unless there is specialization).
+	// According to this all will get no interface except MyType.
+
 	template<typename ImplT, std::size_t TypeIndexT, typename T>
-	struct get { using type	= sema::unspecified; };
+	struct get { using type	= wv::unspecified; };
 
 	template<typename ImplT, std::size_t TypeIndexT>
 	struct get<ImplT, TypeIndexT, MyType>
@@ -79,7 +82,7 @@ struct MyInterfaces
 
 BOOST_AUTO_TEST_CASE( TEST_WITH_CUSTOM_INTERFACE )
 {
-	using ValueT	= sema::sema<MyInterfaces, int, MyType>;
+	using ValueT	= wrapped_variant<MyInterfaces, int, MyType>;
 
 	ValueT v;
 

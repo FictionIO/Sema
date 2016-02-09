@@ -1,7 +1,7 @@
 
 #pragma once
 
-namespace sema {
+namespace wv {
 
 	struct unspecified{};
 
