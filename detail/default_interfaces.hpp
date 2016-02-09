@@ -90,8 +90,6 @@ namespace wv {
 
 				bool isVector() const { return ( (ImplT*)this )->which() == TypeIndexT; };
 				const std::vector<ImplT> & asVector() const { return boost::get<std::vector<ImplT>>( *((ImplT*)this) ); };
-
-				const ImplT & operator [] ( const std::size_t & index ) const { return asVector()[ index ]; };
 			};
 		};
 
@@ -103,10 +101,6 @@ namespace wv {
 
 				bool isMap() const { return ( (ImplT*)this )->which() == TypeIndexT; };
 				const std::map<KeyT, ImplT> & asMap() const { return boost::get<std::map<KeyT, ImplT>>( *((ImplT*)this) ); };
-				std::map<KeyT, ImplT> & asMap() { return boost::get<std::map<KeyT, ImplT>>( *((ImplT*)this) ); };
-
-				const ImplT & operator [] ( const KeyT & key ) const { return asMap().at( key ); };
-				ImplT & operator [] ( const KeyT & key ) { return asMap()[ key ]; };
 			};
 		};
 	};
