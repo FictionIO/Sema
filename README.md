@@ -1,51 +1,46 @@
 
-###Sema 
+###WrappedVariant 
 
-Sema is a set of tools for adding semantical methods to boost variant types.
+WrappedVariant is a convenient Boost.Variant wrapper for adding type interfaces.
 
-Let's say we have a variant type : `variant<int, double, string, recursive_wrapper<object>>` and we want to implement methods
-`isInt, isDouble, ... asObject, asInt, asDouble, ... asObject` we can define a meta function object as :
-
-```
-struct MyInterface
+### Example
+``` 
+struct MyInterfaces
 {
-  template<typename ImplT, std::size_t Index, typename T>
-  struct get{ using type = unspecified; }; // default/fallback case
-  
-  template<typename ImplT, std::size_t Index>
-  struct get<ImplT, Index, int> // notice specialization for int
-  { 
-    using type  = intInterface;
-  }; 
-  
-  template<typename ImplT, std::size_t Index>
-  struct get<ImplT, Index, std::string> // notice specialization for std::string
-  { 
-    using type  = intInterface;
-  }; 
+	template<typename ImplT, std::size_t TypeIndexT, typename T>
+	struct get { using type	= wv::unspecified; };
+
+	template<typename ImplT, std::size_t TypeIndexT>
+	struct get<ImplT, TypeIndexT, int>
+	{
+		struct type
+		{
+			const bool isInt() const
+			{
+				return ( (ImplT*)this )->which() == TypeIndexT;
+			};
+
+			const MyType & asInt() const
+			{
+					return boost::get<int>( *((ImplT*)this) );
+			};
+		};
+	};
 };
-```
 
-By default it returns `sema::unspecified`, no interface type. If template specialization satisfies it returns the interface defined by `type`. This is great because it allows grouping interfaces for similar types! For example you can have one interface for all integer types.
+using MyVariant = wv::wrapped_variant<MyInterfaces, int, bool>;
 
-Then we can define our interface and the storage (boost variant) in one go as :
+MyVariant var = 10;
 
-```
-using MyType = sema<MyInterface, int, double, std::string, sema::container<std::map,std::string, sema::_1>>;
-```
-Here we used `sema::container and sema::_1` to define a recursive type `std::map<std::string, MyType>`
+assert( var.isInt() ); //true
+assert( var.asInt() == 10 ); //true
 
-Now we can use our composed interface methods like :
+// You can also use default interfaces
+// using MyVariant = wv::wrapped_variant<wv::default_interfaces, int, bool>;
 
-```
-MyType value;
+// Or no interface, Will declare a boost::variant<...> without any additional methods
+// using MyVariant = wv::wrapped_variant<wv::no_interface, int, bool>; 
 
-value = 10;
-
-if( value.isInt() )
-{
-  std::cout << value.asInt() << std::endl;
-}
 ```
 
 ##Dependencies
